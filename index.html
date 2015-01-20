@@ -1,0 +1,173 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+	<title>Picture Lottery</title>
+	<link rel="stylesheet" type="text/css" href="base.css">
+    <link rel="stylesheet" type="text/css" href="">
+
+    <style type="text/css">
+    .container{ position: relative;;}
+    .circle{ position: absolute;/*; transform: translateX(100%);*/}
+    body,.container{background: #000;}
+    .image-item{  background: #FFF; width: 100%;  top:0; left:0;
+position: absolute;
+        transition: all .5s ease-in-out .5s;
+        -webkit-transition: all .5s ;
+        -moz-transition: all .5s ;
+        -o-transition: all .5s ;
+    }
+    .image-item-hover img{ width: 400px; height:400px;box-shadow: 0px 2px 28px; z-index: 1; left:-100px; top:-100px;}
+    .image-item-wrapper{ width:80px; margin:5px; height:80px; float: left; position: relative;
+       
+    }
+
+    .hit{background: rgba(0,0,0,0.8); position: absolute; top:0; left: 0; width: 100%; height: 100%; z-index: 11; text-align: center; }
+    .hit .hit-title{ color:#FFF; font-size: 70px; font-weight: bold; text-align: center; padding: 20px; margin: 50px 0 0 0; }
+    .hit-title-slogan{ color:#FFF; font-weight: bold;  padding: 20px;  text-align: center; font-size: 40px; z-index: 19;width: 100%; position: absolute;;}
+    .hit .hit-image{ width:500px; margin: 20px; display: none;}
+    .hit .timecouter{ color:#FFF; font-size: 100px; font-weight: bold; text-align: center; padding: 20px;display: none;}
+    .choujiang-btn,.hit-btn{ background: #D33; border:3px #fff solid; border-radius: 50%; display: inline-block; position: absolute; bottom: 20px; left: 0; right: 0; width: 200px; height: 200px; text-align: center; line-height: 200px; font-size: 80px; color: #FFF; cursor: pointer; margin:  auto;}
+    .choujiang-btn:hover,.hit-btn:hover{  background: #D66;}
+    .hit-btn{ z-index: 10;}
+    </style>
+
+</head>
+<body>
+
+	<div class="container" class="clearfix">
+	</div>
+    
+    <a class="hit-btn">停止</a>
+    <div class="hit">
+        <h2 class="hit-title-slogan">西北农林科技大学辅导员晚会</h2>
+
+        <h2 class="hit-title">抽奖环节</h2>
+        <img class="hit-image" src="">
+        <p class="timecouter"></p>
+        <div>
+            <a class="choujiang-btn">抽奖</a>
+
+        </div>
+    </div>
+
+<script type="text/javascript" src="jquery-1.10.2.min.js"></script>
+    <script>
+       $(document).ready(function(){
+        var $wrapper = $(".container");
+        var counter = 5;// 抽奖倒计时
+        var timeLimit = 40;  //500毫秒的倍数吧，抽奖时间
+        var $hit = $(".hit");
+        var imagePrefix = "avatar_";
+        var imageList="";
+        var imageCount = 100;
+        for(var i =1; i <=imageCount; i++){
+               // imageList+='<div class="image-item-wrapper"><img class="image-item" src="images/avatar_'+i+'.png" /></div>'
+               imageList+='<div class="image-item-wrapper"><img class="image-item" src="images/avatar_1.png" /></div>'
+        }
+        var $imageList = $(imageList);
+        $wrapper.append($imageList);
+        var windowHeight = $(window).height();
+        var windowWidth = $(window).width();
+        var imageMax =windowWidth/2; 
+        var timeout = false;
+        var imageIndex = 0;
+        var next = 0;
+        
+        var timer = 0;
+        
+        var absoluteH = 0;
+        var init = function(){
+            $hit.css({ height:windowHeight,width:windowWidth})
+            var absoluteH = Math.sqrt(windowHeight* windowWidth /100);
+            console.log(windowHeight,windowWidth,absoluteH)
+            absoluteH = absoluteH-10;
+            $imageList.css({ height:absoluteH,width:absoluteH});
+            
+            
+        }
+        init();
+
+        var _counter = counter;
+        var _timeLimit = timeLimit;
+        $hit.find(".timecouter").html(_counter);
+        
+        //抽奖中
+        var start = function(){
+            timeout = setTimeout(function(){
+                 $imageList.eq(imageIndex).removeClass("image-item-hover");
+               
+                next = imageIndex;
+                imageIndex = Math.floor(Math.random()*imageCount);
+                if(next ==imageIndex ){
+                    imageIndex =  Math.floor(Math.random()*imageIndex);
+                }
+                
+                 $imageList.eq(imageIndex).addClass("image-item-hover");
+                 
+                
+                 timer ++;
+                 if(timer<timeLimit ){
+                         start();
+                 }else{
+                    hit($imageList.eq(imageIndex));
+                 }
+            },500);
+        }
+        //倒计时
+        var timecount = function(){
+             $hit.find(".hit-title").html("倒计时");
+              $hit.find(".timecouter").show();
+              $hit.find(".hit-image").hide();
+            $hit.show();
+            setTimeout(function(){
+                $hit.find(".timecouter").html(_counter);
+                _counter--
+                if(_counter <0){
+                    go();
+                }else{
+                    timecount ();
+                }
+                
+            },1000)
+            
+        }
+        //中奖
+        var hit  = function($dom){
+            var $img = $hit.find("img");
+            $img[0].src = $dom.find("img")[0].src;
+            $hit.find(".timecouter").hide();
+            $hit.find(".hit-title").html("恭喜中奖！");
+            $hit.find(".hit-image").show();
+            setTimeout(function(){
+                $(".choujiang-btn").show();
+            },5000);
+            $hit.show();
+        }
+        //开始抽奖
+        var go = function(){
+            $hit.hide();
+            timer = 0;
+            _counter = counter;
+            $hit.find(".timecouter").html(_counter);
+            
+            //$hit.find(".hit-title").html("倒计时");
+             start();
+        }
+        $(".choujiang-btn").on("click",function(){
+            timecount();
+            $(this).hide();
+        });
+        $(".hit-btn").on("click",function(){
+            timer = timeLimit;
+        });
+        $(window).on("keypress",function(e){
+            if(e){
+                timer = timeLimit;
+            }
+        })
+       
+     });
+    </script>
+</body>
+</html>

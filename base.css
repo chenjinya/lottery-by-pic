@@ -1,0 +1,27 @@
+body,div,ul,li,a,p,h1,h2,h3,h4,span{ 
+	font-family:"Arial","STHei","Microsoft Yahei",sans-serif;
+	font-size: 14px;
+	color:#333;
+	margin:0 ;
+	padding:0;
+}
+li{ list-style: none;}
+.clearfix{
+			display: block;
+			zoom:1;
+		}
+		.clearfix:after {
+		content: ".";
+		display: block;
+		height: 0;
+		clear: both;
+		visibility: hidden;
+		line-height: 0;
+
+		}
+a{
+    transition: all .5s ease-in-out .5s;
+    -webkit-transition: all .5s ;
+    -moz-transition: all .5s ;
+    -o-transition: all .5s ;
+}
