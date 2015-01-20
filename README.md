@@ -1,5 +1,5 @@
-# lottery-by-pic
+ï»¿# lottery-by-pic
 
-[Ô¤ÀÀµØÖ·](http://chenjinya.cn/lottery-by-pic/index.html)
+[é¢„è§ˆåœ°å€](http://chenjinya.cn/lottery-by-pic/index.html)
 
 The MIT License (MIT)
